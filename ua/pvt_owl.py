@@ -2,7 +2,6 @@ import random
 
 from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
                    Memory, Query, Task, Typing, Vision, Visual, World)
-
 from ua_owl import UndifferentiatedAgent
 
 
