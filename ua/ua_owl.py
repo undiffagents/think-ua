@@ -3,8 +3,8 @@ from urllib import parse, request
 from xml.dom import minidom
 from xml.etree import ElementTree
 
-from think import (Agent, Audition, Aural, Chunk, Hands, Instruction, Item,
-                   Language, Memory, Mouse, Query, Typing, Vision, Visual)
+from think import (Agent, Audition, Aural, Chunk, Hands, Item, Language,
+                   Memory, Mouse, Query, Typing, Vision)
 
 
 class UndifferentiatedAgent(Agent):
@@ -26,37 +26,47 @@ class UndifferentiatedAgent(Agent):
         #     self, self.memory, self.audition, self.language)
         # self.instruction.add_executor(self.execute)
 
-    def _interpret_fact(self, text):
+    def _interpret_predicate(self, text, isa='fact'):
         chunk = None
-        m = re.search(r'([A-Za-z_-]+)\(([^)]*)\)', text)
-        pred = m.group(1)
-        args = m.group(2).split(',')
+        (pred, args) = text.replace(')', '').split('(')
+        args = args.split(',')
         if len(args) == 1:
-            chunk = Chunk(isa='fact', predicate='isa',
+            chunk = Chunk(isa=isa, predicate='isa',
                           subject=args[0], object=pred)
         elif len(args) == 2:
-            chunk = Chunk(isa='fact', predicate=pred,
+            chunk = Chunk(isa=isa, predicate=pred,
                           subject=args[0], object=args[1])
         if chunk:
-            self.memory.add(chunk)
+            self.memory.store(chunk)
         return chunk
 
-    def _interpret_conditional(self, text):
+    def _interpret_rule(self, text):
         lhs, rhs = text.split('=>')
-        ifs = [self._interpret_fact(t) for t in re.findall(
-            r'[A-Za-z_-]+\([A-Za-z_,-]*\)', lhs)]
-        thens = [self._interpret_fact(t) for t in re.findall(
-            r'[A-Za-z_-]+\([A-Za-z_,-]*\)', rhs)]
-        cond = Chunk(isa='conditional', ifs=ifs, thens=thens)
-        self.memory.add(cond)
-        return cond
+        pred_pat = re.compile(r'[A-Za-z_-]+\([A-Za-z_,-]*\)')
+
+        rule = Chunk(isa='rule')
+        self.memory.store(rule)
+
+        last = rule
+        for t in pred_pat.findall(lhs):
+            chunk = self._interpret_predicate(t, isa='condition')
+            chunk.set('last', last.id)
+            last = chunk
+
+        last = rule
+        for t in pred_pat.findall(rhs):
+            chunk = self._interpret_predicate(t, isa='action')
+            chunk.set('last', last.id)
+            last = chunk
+
+        return rule
 
     def _interpret_owl(self, text):
         text = text.replace(' ', '')
         if text.find('=>') >= 0:
-            return self._interpret_conditional(text)
+            return self._interpret_rule(text)
         else:
-            return self._interpret_fact(text)
+            return self._interpret_predicate(text)
 
     def interpret(self, words):
         return self._interpret_owl(''.join(words))
@@ -72,37 +82,41 @@ class UndifferentiatedAgent(Agent):
             else:
                 return None
 
-    def _execute_if(self, chunk, context):
-        if chunk.predicate == 'appearsIn':
-            visual = self._deep_find(chunk.subject)
+    def _execute_condition(self, cond, context):
+        if cond.predicate == 'appearsIn':
+            visual = self._deep_find(cond.subject)
             if visual:
                 context.set('visual', visual)
                 visobj = self.vision.encode(visual)
-                context.set(chunk.subject, visobj)
+                context.set(cond.subject, visobj)
                 return True
         return False
 
-    def _execute_then(self, chunk, context):
-        if chunk.subject == 'Subject':
-            action = chunk.predicate
-            print('**************  ' + action)
+    def _execute_action(self, action, context):
+        if action.subject == 'Subject':
+            print('**************  ' + action.predicate)
 
-            if action == 'click':
+            if action.predicate == 'click':
                 visual = context.get('visual')
                 self.mouse.point_and_click(visual)
 
-            elif action == 'remember':
+            elif action.predicate == 'remember':
                 pass
 
     def execute(self, chunk, context):
-        if chunk.isa == 'conditional':
-            for if_chunk in chunk.ifs:
-                self.memory.recall_by_id(if_chunk.id)
-                if not self._execute_if(if_chunk, context):
+        if chunk.isa == 'rule':
+
+            cond = self.memory.recall(isa='condition', last=chunk.id)
+            while cond:
+                if not self._execute_condition(cond, context):
                     return False
-            for then_chunk in chunk.thens:
-                self.memory.recall_by_id(then_chunk.id)
-                self._execute_then(then_chunk, context)
+                cond = self.memory.recall(isa='condition', last=cond.id)
+
+            act = self.memory.recall(isa='action', last=chunk.id)
+            while act:
+                self._execute_action(act, context)
+                act = self.memory.recall(isa='action', last=act.id)
+
             return True
 
     def run(self, time=300):
@@ -115,6 +129,5 @@ class UndifferentiatedAgent(Agent):
             chunk = self.language.interpret(text)
 
         while self.time() < time:
-            chunk = self.memory.recall(isa='conditional')
-            print(chunk)
+            chunk = self.memory.recall(isa='rule')
             self.execute(chunk, context)
