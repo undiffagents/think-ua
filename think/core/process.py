@@ -48,7 +48,7 @@ class Process:
             if action is not None:
                 action()
             self.clock.deregister()
-        thread = threading.Thread(target=_actions)
+        thread = threading.Thread(target=_actions, daemon=True)
         self.clock.register(thread)
         thread.start()
         return thread
@@ -62,7 +62,7 @@ class Process:
             if cancel.try_run() and action is not None:
                 action()
             self.clock.deregister()
-        thread = threading.Thread(target=_actions)
+        thread = threading.Thread(target=_actions, daemon=True)
         self.clock.register(thread)
         thread.start()
         return cancel
