@@ -3,7 +3,7 @@ import random
 from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
                    Memory, Query, Task, Typing, Vision, Visual, World)
 
-from ua import UndifferentiatedAgent
+from ua_ace import UndifferentiatedAgent
 
 
 class Trace:

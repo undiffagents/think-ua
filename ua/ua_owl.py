@@ -36,7 +36,7 @@ class UndifferentiatedAgent(Agent):
         #     self, self.memory, self.audition, self.language)
         # self.instruction.add_executor(self.execute)
 
-    def _interpret_predicate(self, text, isa='fact'):
+    def _interpret_predicate(self, text, isa='fact', last=None):
         chunk = None
         (pred, args) = text.replace(')', '').split('(')
         args = args.split(',')
@@ -47,6 +47,8 @@ class UndifferentiatedAgent(Agent):
             chunk = Chunk(isa=isa, predicate=pred,
                           subject=args[0], object=args[1])
         if chunk:
+            if last:
+                chunk.set('last', last.id)
             self.memory.store(chunk)
         return chunk
 
@@ -59,14 +61,12 @@ class UndifferentiatedAgent(Agent):
 
         last = rule
         for t in pred_pat.findall(lhs):
-            chunk = self._interpret_predicate(t, isa='condition')
-            chunk.set('last', last.id)
+            chunk = self._interpret_predicate(t, isa='condition', last=last)
             last = chunk
 
         last = rule
         for t in pred_pat.findall(rhs):
-            chunk = self._interpret_predicate(t, isa='action')
-            chunk.set('last', last.id)
+            chunk = self._interpret_predicate(t, isa='action', last=last)
             last = chunk
 
         return rule
