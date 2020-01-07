@@ -6,6 +6,11 @@ class Task(Process):
     def __init__(self, agent, name="task"):
         super().__init__("task", clock=agent.clock)
         self.agent = agent
+        self.events = []
+
+    def record(self, event):
+        self.events.append((self.time(), event))
+        return self
 
 
 class World:
@@ -15,7 +20,7 @@ class World:
         if len(self.processes) > 0:
             p0 = self.processes[0]
             for p in self.processes[1:]:
-                p.clock = p0.clock        
+                p.clock = p0.clock
 
     def run(self, time=300):
         if len(self.processes) > 0:

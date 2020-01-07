@@ -4,7 +4,7 @@ from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
                    Memory, Query, Task, Typing, Vision, Visual, World)
 
 
-class PVTTask(Task):
+class SearchTask(Task):
     """Psychomotor Vigilance Task"""
 
     def __init__(self, agent, instructions=[]):
