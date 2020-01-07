@@ -7,14 +7,14 @@ from think import (Agent, Audition, Aural, Chunk, Hands, Item, Language,
                    Memory, Mouse, Query, Typing, Vision)
 
 
-class InstructionChunk:
+# class InstructionChunk:
 
-    def __init__(self, query, fn):
-        self.query = query
-        self.fn = fn
+#     def __init__(self, query, fn):
+#         self.query = query
+#         self.fn = fn
 
-    def execute(self):
-        pass
+#     def execute(self):
+#         pass
 
 
 class UndifferentiatedAgent(Agent):

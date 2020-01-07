@@ -2,8 +2,7 @@ import random
 
 from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
                    Memory, Query, Task, Typing, Vision, Visual, World)
-
-from ua_ace import UndifferentiatedAgent
+from ua.ace import UndifferentiatedAgent
 
 
 class Trace:
@@ -26,7 +25,7 @@ class PVT(Task):
         self.audition = self.agent.audition
         self.typing = self.agent.typing
 
-    def run(self, time=300):
+    def run(self, time=10):
         """Builds and runs the test agent and task"""
         trace = Trace(self)
         stimulus = None
@@ -62,10 +61,10 @@ class PVT(Task):
             self.vision.add(stimulus, '*')
             trace.add('stimulus')
 
-        print(trace)
+        # print(trace)
 
 
 if __name__ == "__main__":
     agent = UndifferentiatedAgent()
     task = PVT(agent)
-    World(agent, task).run(300)
+    World(agent, task).run(100)
