@@ -2,10 +2,9 @@ import random
 
 from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
                    Memory, Query, Task, Typing, Vision, Visual, World)
-from ua.owl import UndifferentiatedAgent
 
 
-class Trace:
+class PVTTrace:
 
     def __init__(self, process):
         self.process = process
@@ -16,40 +15,28 @@ class Trace:
         print('{:>12.3f}\t{}'.format(self.process.time(), event))
 
 
-class PVT(Task):
+class PVTTask(Task):
     """Psychomotor Vigilance Task"""
 
-    def __init__(self, agent):
+    def __init__(self, agent, instructions=[]):
         super().__init__(agent)
         self.vision = self.agent.vision
         self.audition = self.agent.audition
         self.typing = self.agent.typing
+        self.instructions = instructions
 
     def run(self, time=10):
         """Builds and runs the test agent and task"""
-        trace = Trace(self)
+        trace = PVTTrace(self)
         stimulus = None
 
         def handle_key(key):
             self.vision.remove(stimulus)
             trace.add('response')
+
         self.typing.add_type_fn(handle_key)
 
-        instructions = [
-            'task(Psychomotor-Vigilance)',
-            'button(Acknowledge)',
-            'box(Box)',
-            'target(Target)',
-            'letter(Letter)',
-            'subject(Subject)',
-            'isPartOf(Box,Psychomotor-Vigilance)',
-            'isPartOf(Target,Psychomotor-Vigilance)',
-            'isPartOf(Letter,Target)',
-            # 'hasProperty(Psychomotor-Vigilance,active)=>appearsIn(Target,Box)',
-            'appearsIn(Target,Box)=>click(Subject,Acknowledge),remember(Subject,Letter)',
-            'done(Psychomotor-Vigilance)'
-        ]
-        for line in instructions:
+        for line in self.instructions:
             self.wait(5.0)
             if isinstance(line, str):
                 self.audition.add(Aural(isa='speech'), line)
@@ -64,10 +51,4 @@ class PVT(Task):
             self.vision.add(stimulus, 'A')
             trace.add('Target')
 
-        print(trace)
-
-
-if __name__ == "__main__":
-    agent = UndifferentiatedAgent()
-    task = PVT(agent)
-    World(agent, task).run(100)
+        return trace

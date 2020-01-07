@@ -6,7 +6,7 @@ from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
                    Memory, Query, Typing, Vision, Visual)
 
 
-class UndifferentiatedAgent(Agent):
+class ACEUndifferentiatedAgent(Agent):
 
     def __init__(self):
         """Initializes the agent"""
@@ -32,7 +32,7 @@ class UndifferentiatedAgent(Agent):
             # 'solo': 'owlxml',
             'cdrs': 'on',
             'cowlxml': 'on',
-            }
+        }
         data = parse.urlencode(params).encode()
         req = request.Request(url, parse.urlencode(params).encode())
         res = request.urlopen(req)

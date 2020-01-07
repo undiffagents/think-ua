@@ -17,7 +17,7 @@ from think import (Agent, Audition, Aural, Chunk, Hands, Item, Language,
 #         pass
 
 
-class UndifferentiatedAgent(Agent):
+class OWLUndifferentiatedAgent(Agent):
 
     def __init__(self):
         """Initializes the agent"""
