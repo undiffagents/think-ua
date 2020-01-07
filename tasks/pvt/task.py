@@ -16,10 +16,9 @@ class PVTTask(Task):
 
     def run(self, time=10):
         """Builds and runs the test agent and task"""
-        stimulus = None
 
         def handle_key(key):
-            self.vision.remove(stimulus)
+            self.vision.clear()
             self.record('response')
 
         self.typing.add_type_fn(handle_key)
@@ -30,7 +29,7 @@ class PVTTask(Task):
                 self.audition.add(Aural(isa='speech'), line)
             else:
                 self.audition.add(Aural(isa='speech'), line[0])
-                loc = line[1]
+                # loc = line[1]
                 # pointer.move(loc[0], loc[1])
 
         while self.time() < time:
