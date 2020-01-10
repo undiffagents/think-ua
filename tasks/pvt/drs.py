@@ -1,5 +1,5 @@
 
-OWL_INSTRUCTIONS = [
+DRS_INSTRUCTIONS = [
     'task(Psychomotor-Vigilance)',
     'button(Acknowledge)',
     'box(Box)',

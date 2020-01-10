@@ -17,7 +17,7 @@ from think import (Agent, Audition, Aural, Chunk, Hands, Item, Language,
 #         pass
 
 
-class OWLUndifferentiatedAgent(Agent):
+class DRSUndifferentiatedAgent(Agent):
 
     def __init__(self):
         """Initializes the agent"""
@@ -71,7 +71,7 @@ class OWLUndifferentiatedAgent(Agent):
 
         return rule
 
-    def _interpret_owl(self, text):
+    def _interpret_drs(self, text):
         text = text.replace(' ', '')
         if text.find('=>') >= 0:
             return self._interpret_rule(text)
@@ -79,7 +79,7 @@ class OWLUndifferentiatedAgent(Agent):
             return self._interpret_predicate(text)
 
     def interpret(self, words):
-        return self._interpret_owl(''.join(words))
+        return self._interpret_drs(''.join(words))
 
     def _deep_find(self, isa):
         visual = self.vision.find(isa=isa, seen=False)
