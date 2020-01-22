@@ -30,42 +30,26 @@
 
 # %% Tester
 
-#import sys
-#sys.stdout = open('file', 'w')
-#print('test')
-
-
-
 # %% Main Task
 from tasks.pvt import OWL_INSTRUCTIONS, PVTTask
 #from tasks.pvt import PVTTask
 from think import World
 from ua import OWLUndifferentiatedAgent
+from core.logger import get_think_logger
+import logging
 
 
-import sys
-sys.stdout = open('file', 'w')
-print('test')
 
-#import sys
-#ogout = sys.stdout
-#sys.stdout = open('outfile.txt', 'w')
-#print('test')
-
-#owlin = open("OWL_Instructions.txt","r")
-#
-#OWL_INSTRUCTIONS = owlin.read().splitlines()
-#
-#owlin.close()
-
-#if __name__ == "__main__":
-agent = OWLUndifferentiatedAgent()
-task = PVTTask(agent, instructions=OWL_INSTRUCTIONS)
-World(task, agent).run(100)
-    
+if __name__ == "__main__":
+#    thinklog = get_think_logger(logfilename="outfile.txt", uselogfile=True)
+#    agent = OWLUndifferentiatedAgent(output=thinklog)
+    agent = OWLUndifferentiatedAgent()
+    task = PVTTask(agent, instructions=OWL_INSTRUCTIONS)
+    World(task, agent).run(100)
+    logging.shutdown()
 
 #sys.stdout = ogout
-
+    
 #    for line in owlin:
 #        if not ' ' in line:
 #            if 'object'in line:

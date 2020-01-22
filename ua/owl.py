@@ -19,9 +19,10 @@ from think import (Agent, Audition, Aural, Chunk, Hands, Item, Language,
 
 class OWLUndifferentiatedAgent(Agent):
 
-    def __init__(self):
+#CK 2020/01/13 - updated to allow passing in of prespecified logger
+    def __init__(self, output=True):
         """Initializes the agent"""
-        super().__init__(output=True)
+        super().__init__(output=output)
         self.memory = Memory(self)
         self.vision = Vision(self)
         self.audition = Audition(self)
