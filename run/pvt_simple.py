@@ -3,6 +3,6 @@ from think import Machine, World
 
 if __name__ == "__main__":
     machine = Machine()
-    agent = PVTAgent(machine)
     task = PVTTask(machine)
+    agent = PVTAgent(machine)
     World(task, agent).run(30)
