@@ -33,7 +33,7 @@ class Process:
 
     def __init__(self, name, clock=None):
         self.name = name
-        self.clock = clock if clock is not None else Clock()
+        self.clock = clock
 
     def time(self):
         return self.clock.time()
@@ -42,13 +42,15 @@ class Process:
         raise Exception('Run not implemented')
 
     def run_thread(self, action, delay=0.0):
-        def _actions():
+
+        def _run():
             if delay > 0:
                 self.wait(delay)
-            if action is not None:
+            if action:
                 action()
             self.clock.deregister()
-        thread = threading.Thread(target=_actions, daemon=True)
+        
+        thread = threading.Thread(target=_run, daemon=True)
         self.clock.register(thread)
         thread.start()
         return thread

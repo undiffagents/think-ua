@@ -7,7 +7,7 @@ from think import Location, Module
 class Eyes(Module):
 
     def __init__(self, agent):
-        super().__init__("eyes", agent)
+        super().__init__('eyes', agent)
         self.vision = None
         self.loc = Location(0, 0)
         self.last_prep_cancel = None
@@ -41,7 +41,7 @@ class Eyes(Module):
     def _rand_time(self, time):
         return max(time + random.gauss(0, time / 3), .001)
 
-    def prepare(self, visual, obj, enc_start, enc_dur):
+    def prepare(self, visual, enc_start, enc_dur):
         if self.last_prep_cancel is not None:
             self.last_prep_cancel.try_cancel()
         sd = .1 * \
@@ -49,29 +49,29 @@ class Eyes(Module):
                 self._compute_eccentricity(visual))
         new_loc = Location(visual.x + random.gauss(0, sd),
                            visual.y + random.gauss(0, sd))
-        self.log("prepare {}".format(new_loc))
+        self.log('prepare {}'.format(new_loc))
         duration = self._rand_time(self.prep_time)
 
         def fn():
-            self.move(visual, obj, new_loc, enc_start, enc_dur)
+            self.move(visual, new_loc, enc_start, enc_dur)
 
         self.last_prep_cancel = self.run_thread_can_cancel(fn, duration)
 
-    def move(self, visual, obj, new_loc, enc_start, enc_dur):
-        self.log("move {}".format(new_loc))
+    def move(self, visual, new_loc, enc_start, enc_dur):
+        self.log('move {}'.format(new_loc))
         duration = self._rand_time(
             self.exec_time_base) + self.exec_time_inc * self._compute_eccentricity(visual)
 
         def fn():
-            self.log("moved {}".format(new_loc))
+            self.log('moved {}'.format(new_loc))
             self.loc = new_loc
             if enc_start + enc_dur > self.time():
                 completed = (self.time() - enc_start) / enc_dur
                 new_time = self.compute_enc_time(visual)
                 rem_dur = (1 - completed) * new_time
                 if rem_dur > 0:
-                    self.vision.start_encode_thread(visual, obj, rem_dur)
-                    self.prepare(visual, obj, self.time(), rem_dur)
+                    self.vision.start_encode_thread(visual, rem_dur)
+                    self.prepare(visual, self.time(), rem_dur)
             for fn in self.fixate_fns:
                 fn(self.loc)
 

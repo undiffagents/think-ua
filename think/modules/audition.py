@@ -15,11 +15,12 @@ class Aural(Item):
 
 class Audition(Module):
 
-    def __init__(self, agent):
-        super().__init__("audition", agent)
+    def __init__(self, agent, speakers):
+        super().__init__('audition', agent)
+        self.speakers = speakers.set_audition(self)
         self.aurals = []
-        self.listen_buffer = Buffer("audition.listen", self)
-        self.encode_buffer = Buffer("audition.encode", self)
+        self.listen_buffer = Buffer('audition.listen', self)
+        self.encode_buffer = Buffer('audition.encode', self)
         self.listen_for_query = None
         self.last_encode_cancel = None
         self.attend_fns = []
@@ -30,11 +31,14 @@ class Audition(Module):
 
         self.syllable_rate = .150
 
+    def add_from_speakers(self, isa, obj):
+        return self.add(Aural(isa), obj)
+
     def add(self, aural, obj):
         self.aurals.append((aural, obj))
         if self.listen_for_query is not None and self.listen_for_query.matches(aural):
             self._finish_listen(aural)
-        return self
+        return aural
 
     def add_speech(self, text):
         def thread():
@@ -81,13 +85,13 @@ class Audition(Module):
     def start_listen(self, query=None, heard=False, **kwargs):
         query = self._construct_query(query, heard, kwargs)
         self.listen_buffer.acquire()
-        self.think("listen {}".format(query))
+        self.think('listen {}'.format(query))
         match = self._try_listen(query)
         if match is not None:
             self._finish_listen(match)
         else:
             duration = self.listen_time
-            self.listen_buffer.clear(duration, "listen failed")
+            self.listen_buffer.clear(duration, 'listen failed')
 
     def get_found(self):
         return self.listen_buffer.get_and_release()
@@ -100,7 +104,7 @@ class Audition(Module):
     def start_listen_for(self, query=None, heard=False, **kwargs):
         query = self._construct_query(query, heard, kwargs)
         self.listen_buffer.acquire()
-        self.think("wait for {}".format(query))
+        self.think('wait for {}'.format(query))
         aural = self._try_listen(query)
         if aural is not None:
             self._finish_listen(aural)
@@ -115,7 +119,7 @@ class Audition(Module):
             aural.set('heard', True)
             for fn in self.attend_fns:
                 fn(aural)
-        self.listen_buffer.set(aural, duration, "found {}".format(aural), fn)
+        self.listen_buffer.set(aural, duration, 'found {}'.format(aural), fn)
 
     def listen_for(self, query=None, heard=False, **kwargs):
         query = self._construct_query(query, heard, kwargs)
@@ -139,7 +143,7 @@ class Audition(Module):
     def start_encode(self, aural, suppress_think=False):
         self.encode_buffer.acquire()
         if not suppress_think:
-            self.think("encode {}".format(aural))
+            self.think('encode {}'.format(aural))
         obj = None
         for (a, o) in self.aurals:
             if a == aural:
@@ -148,7 +152,7 @@ class Audition(Module):
         if obj is not None:
             self.start_encode_thread(aural, obj, duration)
         else:
-            self.encode_buffer.clear(duration, "encode failed")
+            self.encode_buffer.clear(duration, 'encode failed')
 
     def get_encoded(self):
         return self.encode_buffer.get_and_release()

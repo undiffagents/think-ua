@@ -1,9 +1,25 @@
 import logging
 import threading
+import time
 
 from .logger import get_think_logger
 
 _DEBUG = False
+
+
+try:
+
+    import os
+    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
+    import pygame
+
+    def sleep(sec):
+        pygame.time.delay(int(1000 * sec))
+
+except ImportError as e:
+
+    def sleep(sec):
+        time.sleep(sec)
 
 
 class _ThreadInfo:
@@ -24,7 +40,7 @@ class _ThreadInfo:
                      3: 'event_wait', 4: 'next', 5: 'done'}
 
     def __str__(self):
-        return "{}: {} [{}, {}]".format(self.index, _ThreadInfo.status_labels[self.status],
+        return '{}: {} [{}, {}]'.format(self.index, _ThreadInfo.status_labels[self.status],
                                         self.requested_time, self.last_think_time)
 
 
@@ -39,6 +55,9 @@ class Clock:
         self.event_flag = False
         self.barrier = threading.Barrier(0, lambda: self.update_all())
         self.barrier_lock = threading.Lock()
+        self.set_output(output)
+
+    def set_output(self, output):
         if isinstance(output, logging.Logger):
             self.logger = output
         elif output:
@@ -49,24 +68,31 @@ class Clock:
     def advance(self, dt):
         with self.time_lock:
             self._time += dt
+            if self.real_time:
+                sleep(dt)
 
     def time(self):
         with self.time_lock:
             return self._time
 
-    def set(self, time):
+    def set(self, t):
         with self.time_lock:
-            self._time = time
+            old_time = self._time
+            self._time = t
+            if self.real_time and old_time < t:
+                sleep(t - old_time)
 
     def register(self, thread):
+        n_threads = 0
         with self.threads_lock:
             self.threads[thread] = _ThreadInfo(len(self.threads) + 1)
             if _DEBUG:
-                self.debug("register thread: " + thread.name)
+                self.debug('register thread: ' + thread.name)
+            n_threads = len(self.threads)
         with self.barrier_lock:
-            self.barrier._parties = self.barrier._parties + 1
+            self.barrier._parties = n_threads  # self.barrier._parties + 1
             if _DEBUG:
-                self.debug("({} threads in barrier)".format(
+                self.debug('({} threads in barrier)'.format(
                     self.barrier.parties))
 
     def n_threads(self):
@@ -99,12 +125,12 @@ class Clock:
             self.threads[threading.current_thread(
             )].last_think_time = self.time()
         if _DEBUG:
-            self.debug("reported think")
+            self.debug('reported think')
 
     def report_event(self):
         self.event_flag = True
         if _DEBUG:
-            self.debug("reported event")
+            self.debug('reported event')
 
     def wait_for_next_event(self):
         with self.threads_lock:
@@ -121,7 +147,7 @@ class Clock:
 
     def _wait_my_turn(self):
         if _DEBUG:
-            self.debug("waiting at barrier...")
+            self.debug('waiting at barrier...')
         self.barrier.wait()
         while not self._is_running(threading.current_thread()):
             self.barrier.wait()
@@ -132,13 +158,13 @@ class Clock:
 
     def _debug_threads(self):
         for thread, info in self.threads.items():
-            self.debug("[{}] -> {}".format(thread.name, info))
+            self.debug('[{}] -> {}'.format(thread.name, info))
 
     def update_all(self):
         with self.threads_lock:
             if _DEBUG:
-                self.debug("updating: event_flag = {}".format(self.event_flag))
-                self.debug("-----")
+                self.debug('updating: event_flag = {}'.format(self.event_flag))
+                self.debug('-----')
                 self._debug_threads()
 
             dones = []
@@ -148,7 +174,7 @@ class Clock:
             for thread in dones:
                 del self.threads[thread]
                 if _DEBUG:
-                    self.debug("deleting thread [{}]".format(thread.name))
+                    self.debug('deleting thread [{}]'.format(thread.name))
                 with self.barrier_lock:
                     self.barrier._parties = self.barrier._parties - 1
 
@@ -160,9 +186,9 @@ class Clock:
             if count == 0:
                 self._run_timed_threads_locked()
             if _DEBUG:
-                self.debug("--> [t={}]".format(self.time()))
+                self.debug('--> [t={}]'.format(self.time()))
                 self._debug_threads()
-                self.debug("-----")
+                self.debug('-----')
 
     def _change_status_locked(self, old, new):
         count = 0
@@ -212,17 +238,17 @@ class Clock:
         self.barrier.wait()
         while len(self.threads) > 1:
             if _DEBUG:
-                self.debug("waiting for all...")
+                self.debug('waiting for all...')
             self.barrier.wait()
 
-    def log(self, message, source="clock"):
+    def log(self, message, source='clock'):
         if self.logger:
             self.logger.info(
                 message, extra={'time': self.time(), 'source': source})
 
-    def debug(self, message, source="clock"):
+    def debug(self, message, source='clock'):
         if _DEBUG and self.logger:
-            message = "[{}] {}".format(
+            message = '[{}] {}'.format(
                 threading.current_thread().name, message)
             self.logger.debug(
                 message, extra={'time': self.time(), 'source': source})
