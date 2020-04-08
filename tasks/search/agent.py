@@ -1,26 +1,24 @@
-from think import Agent, Audition, Hands, Typing, Vision, Visual
+from think import Agent, Motor, Vision
 
 
 class SearchAgent(Agent):
 
-    def __init__(self):
+    def __init__(self, machine):
         super().__init__(output=True)
-        self.vision = Vision(self)
-        self.audition = Audition(self)
-        self.typing = Typing(Hands(self))
+        self.vision = Vision(self, machine.display)
+        self.motor = Motor(self, self.vision, machine)
 
-    def run(self, time=300):
+    def run(self, time):
         while self.time() < time:
             visual = self.vision.wait_for(seen=False)
-            while (visual is not None
-                    and not visual.isa == 'vertical-line'):
-                obj = self.vision.encode(visual)
-                print('**** skip')
+            obj = self.vision.encode(visual) if visual else None
+            while visual and obj != 'C':
                 visual = self.vision.find(seen=False)
-            if visual:
-                print('**** found')
-                self.typing.type('j')
+                obj = self.vision.encode(visual) if visual else None
+            if obj == 'C':
+                self.log('target found')
+                self.motor.type('j')
                 self.vision.encode(visual)
             else:
-                print('**** not found')
-                self.typing.type('k')
+                self.log('target not found')
+                self.motor.type('k')
