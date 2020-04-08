@@ -2,19 +2,19 @@ from urllib import parse, request
 from xml.dom import minidom
 from xml.etree import ElementTree
 
-from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
-                   Memory, Query, Typing, Vision, Visual)
+from think import (Agent, Audition, Aural, Instruction, Item, Language,
+                   Machine, Memory, Motor, Query, Vision, Visual)
 
 
 class UndifferentiatedAgent(Agent):
 
-    def __init__(self):
+    def __init__(self, machine):
         """Initializes the agent"""
         super().__init__(output=True)
-        self.vision = Vision(self)
         self.memory = Memory(self)
-        self.audition = Audition(self)
-        self.typing = Typing(Hands(self))
+        self.vision = Vision(self, machine.display)
+        self.audition = Audition(self, machine.speakers)
+        self.motor = Motor(self, self.vision, machine)
 
         self.language = Language(self)
         self.language.add_interpreter(lambda w: self.interpreter(w))
