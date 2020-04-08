@@ -1,18 +1,16 @@
-from think import Agent, Audition, Hands, Typing, Vision, Visual
+from think import Agent, Motor, Vision
 
 
 class PVTAgent(Agent):
 
-    def __init__(self):
-        """Initializes the agent"""
+    def __init__(self, machine):
         super().__init__(output=True)
-        self.vision = Vision(self)
-        self.audition = Audition(self)
-        self.typing = Typing(Hands(self))
+        self.vision = Vision(self, machine.display)
+        self.motor = Motor(self, self.vision, machine)
 
-    def run(self, time=300):
+    def run(self, time):
         while self.time() < time:
             visual = self.vision.wait_for(seen=False)
             self.vision.start_encode(visual)
-            self.typing.type('j')
+            self.motor.type('j')
             self.vision.get_encoded()

@@ -1,39 +1,22 @@
 import random
 
-from think import (Agent, Audition, Aural, Hands, Instruction, Item, Language,
-                   Memory, Query, Task, Typing, Vision, Visual, World)
+from think import Task
 
 
 class PVTTask(Task):
-    """Psychomotor Vigilance Task"""
 
-    def __init__(self, agent, instructions=[]):
-        super().__init__(agent)
-        self.vision = self.agent.vision
-        self.audition = self.agent.audition
-        self.typing = self.agent.typing
-        self.instructions = instructions
+    def __init__(self, machine):
+        super().__init__()
+        self.display = machine.display
+        self.keyboard = machine.keyboard
 
-    def run(self, time=10):
-        """Builds and runs the test agent and task"""
+    def run(self, time):
 
         def handle_key(key):
-            self.vision.clear()
-            self.record('response')
+            self.display.clear()
 
-        self.typing.add_type_fn(handle_key)
-
-        for line in self.instructions:
-            self.wait(5.0)
-            if isinstance(line, str):
-                self.audition.add(Aural(isa='speech'), line)
-            else:
-                self.audition.add(Aural(isa='speech'), line[0])
-                # loc = line[1]
-                # pointer.move(loc[0], loc[1])
+        self.keyboard.add_type_fn(handle_key)
 
         while self.time() < time:
             self.wait(random.randint(2.0, 10.0))
-            stimulus = Visual(50, 50, 20, 20, 'Letter')
-            self.vision.add(stimulus, 'A')
-            self.record('stimulus')
+            self.display.add_text(50, 50, 'X')
