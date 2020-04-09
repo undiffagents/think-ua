@@ -1,1 +1,1 @@
-from .task import InstructionTask
+from .factory import InstructionTaskFactory
