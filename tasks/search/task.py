@@ -5,10 +5,10 @@ from think import Task
 
 class SearchTask(Task):
 
-    def __init__(self, machine, n_targets=5):
+    def __init__(self, env, n_targets=5):
         super().__init__()
-        self.display = machine.display
-        self.keyboard = machine.keyboard
+        self.display = env.display
+        self.keyboard = env.keyboard
         self.n_targets = n_targets
 
     def run(self, time):

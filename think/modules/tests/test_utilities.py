@@ -66,7 +66,7 @@ class SyllableTest(unittest.TestCase):
                   'center': 2, 'love': 1, 'person': 2, 'money': 2, 'serve': 1, 'appear': 2,
                   'road': 1, 'map': 1, 'rain': 1, 'rule': 1, 'govern': 2, 'pull': 1, 'cold': 1,
                   'notice': 2, 'voice': 1, 'unit': 2, 'power': 2, 'town': 1, 'fine': 1,
-                  'certain': 2, 'fly': 1, 'fall': 1, 'lead': 1, 'cry': 1, 'dark': 1, 'machine': 2,
+                  'certain': 2, 'fly': 1, 'fall': 1, 'lead': 1, 'cry': 1, 'dark': 1, 'env': 2,
                   'note': 1, 'wait': 1, 'plan': 1, 'figure': 2, 'star': 1, 'box': 1, 'noun': 1,
                   'field': 1, 'rest': 1, 'correct': 2, 'able': 2, 'pound': 1, 'done': 1,
                   'beauty': 2, 'drive': 1, 'stood': 1, 'contain': 2, 'front': 1, 'teach': 1,

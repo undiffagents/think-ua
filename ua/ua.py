@@ -3,18 +3,18 @@ from xml.dom import minidom
 from xml.etree import ElementTree
 
 from think import (Agent, Audition, Aural, Instruction, Item, Language,
-                   Machine, Memory, Motor, Query, Vision, Visual)
+                   Environment, Memory, Motor, Query, Vision, Visual)
 
 
 class UndifferentiatedAgent(Agent):
 
-    def __init__(self, machine):
+    def __init__(self, env):
         """Initializes the agent"""
         super().__init__(output=True)
         self.memory = Memory(self)
-        self.vision = Vision(self, machine.display)
-        self.audition = Audition(self, machine.speakers)
-        self.motor = Motor(self, self.vision, machine)
+        self.vision = Vision(self, env.display)
+        self.audition = Audition(self, env.speakers)
+        self.motor = Motor(self, self.vision, env)
 
         self.language = Language(self)
         self.language.add_interpreter(lambda w: self.interpreter(w))

@@ -1,8 +1,8 @@
 from tasks.pvt import PVTAgent, PVTTask
-from think import Machine, World
+from think import Environment, World
 
 if __name__ == "__main__":
-    machine = Machine()
-    task = PVTTask(machine)
-    agent = PVTAgent(machine)
+    env = Environment()
+    task = PVTTask(env)
+    agent = PVTAgent(env)
     World(task, agent).run(30)

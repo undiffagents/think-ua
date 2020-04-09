@@ -5,10 +5,10 @@ from think import Task
 
 class PVTTask(Task):
 
-    def __init__(self, machine):
+    def __init__(self, env):
         super().__init__()
-        self.display = machine.display
-        self.keyboard = machine.keyboard
+        self.display = env.display
+        self.keyboard = env.keyboard
 
     def run(self, time):
 

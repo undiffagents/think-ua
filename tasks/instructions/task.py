@@ -1,14 +1,14 @@
 from think import Task
 
 
-def InstructionTask(task_class, instructions, machine):
+def InstructionTask(task_class, instructions, env):
 
     def init(self):
-        task_class.__init__(self, machine)
+        task_class.__init__(self, env)
     
     def run(self, time):
-        display = machine.display
-        speakers = machine.speakers
+        display = env.display
+        speakers = env.speakers
 
         pointer = None
         for line in instructions:

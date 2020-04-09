@@ -48,7 +48,7 @@
 #         [("sheri", 1), ("and", 28850), ("her", 3036), ("friends", 161), ("went", 508), ("to", 26155),
 #          ("hawaii", 16), ("for", 9489), ("their", 2670), ("summer", 134), ("vacation", 47)],
 #         [("mark", 83), ("put", 438), ("too", 834), ("much", 937), ("soap", 22), ("in", 21335),
-#          ("the", 69974), ("washing", 44), ("machine",
+#          ("the", 69974), ("washing", 44), ("env",
 #                                            103), ("and", 69974), ("it", 8761),
 #          ("overflowed", 2)],
 #         [("the", 69974), ("circus", 7), ("tents", 10), ("were", 3286), ("crowded", 32), ("with", 7289),

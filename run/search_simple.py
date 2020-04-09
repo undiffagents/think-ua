@@ -1,8 +1,8 @@
 from tasks.search import SearchAgent, SearchTask
-from think import Machine, World
+from think import Environment, World
 
 if __name__ == "__main__":
-    machine = Machine()
-    task = SearchTask(machine)
-    agent = SearchAgent(machine)
+    env = Environment()
+    task = SearchTask(env)
+    agent = SearchAgent(env)
     World(task, agent).run(30)
