@@ -10,7 +10,7 @@ def InstructionTaskFactory(task_class, instructions):
 
         if instructions:
             pointer = None
-            for line in instructions:
+            for line in instructions + ['done']:
                 self.wait(3.0)
                 if isinstance(line, str):
                     self.speakers.add('speech', line)

@@ -21,15 +21,15 @@ class PVTTask(Task):
 
         while self.time() < time:
             self.wait(random.randint(2.0, 10.0))
+            self.log('stimulus')
             self.display.add_text(50, 50, 'X')
 
 
 PVT_INSTRUCTIONS = [
     'to perform-task',
     'wait-for stimulus',
-    # ['read stimulus', (50, 50)],
     'press "j"',
-    'done'
+    'repeat'
 ]
 
 

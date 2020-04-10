@@ -18,7 +18,10 @@ class UndifferentiatedAgent(Agent):
             self, self.memory, self.audition, self.language)
         self.instruction.add_executor(lambda a, c: self.executor(a, c))
 
+        self.time_limit = None
+
     def interpreter(self, words):
+        print(words)
         if words[0] == 'read':
             sem = Item(isa='action', type='read', object=words[1])
             pointer = self.vision.find(isa='pointer')
@@ -28,16 +31,29 @@ class UndifferentiatedAgent(Agent):
             return sem
         elif words[0] == 'done':
             return Item(isa='done')
-        else:
+        elif len(words) > 1:
             return Item(isa='action', type=words[0], object=words[1])
+        else:
+            print(words[0])
+            return Item(isa='action', type=words[0])
 
     def executor(self, action, context):
-        if action.type == 'read':
+        if action.type == 'wait-for':
+            visual = self.vision.wait_for()
+            context.set(action.object, self.vision.encode(visual))
+        elif action.type == 'read':
             query = Query(x=action.x, y=action.y)
             context.set(action.object, self.vision.find_and_encode(query))
-        elif action.type == 'type':
-            self.typing.type(context.get(action.object))
+        elif action.type == 'type' or action.type == 'press':
+            text = (action.object[1:-1]
+                    if action.object.startswith('"')
+                    else context.get(action.object))
+            self.motor.type(text)
+        elif action.type == 'repeat':
+            if (not self.time_limit) or self.time() < self.time_limit:
+                self.instruction.execute(self.goal)
 
-    def run(self, time=60):
-        goal = self.instruction.listen_and_learn()
-        self.instruction.execute(goal)
+    def run(self, time):
+        self.goal = self.instruction.listen_and_learn()
+        self.time_limit = self.time() + time
+        self.instruction.execute(self.goal)
