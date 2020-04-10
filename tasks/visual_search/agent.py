@@ -1,7 +1,7 @@
 from think import Agent, Motor, Vision
 
 
-class SearchAgent(Agent):
+class VisualSearchAgent(Agent):
 
     def __init__(self, env):
         super().__init__(output=True)

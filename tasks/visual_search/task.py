@@ -3,7 +3,7 @@ import random
 from think import Task
 
 
-class SearchTask(Task):
+class VisualSearchTask(Task):
 
     def __init__(self, env, n_targets=5):
         super().__init__()
@@ -20,6 +20,7 @@ class SearchTask(Task):
 
         while self.time() < time:
             self.wait(3.0)
+            self.log('stimulus')
             self.display.clear()
             target_index = random.randint(0, self.n_targets)
             for i in range(self.n_targets):
