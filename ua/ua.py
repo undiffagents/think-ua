@@ -21,7 +21,6 @@ class UndifferentiatedAgent(Agent):
         self.time_limit = None
 
     def interpreter(self, words):
-        print(words)
         if words[0] == 'read':
             sem = Item(isa='action', type='read', object=words[1])
             pointer = self.vision.find(isa='pointer')
