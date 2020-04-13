@@ -1,2 +1,3 @@
 from .agent import PairedAssociatesAgent
-from .task import PairedAssociatesTask #, PairedAssociatesInstructionTask
+from .simulation import PairedAssociatesSimulation
+from .task import PairedAssociatesTask
