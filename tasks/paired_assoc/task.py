@@ -56,7 +56,8 @@ PAIRED_ASSOCIATE_INSTRUCTIONS = [
     'wait_for word',
     'recall number for word',
     'if number type number',
-    'wait_for number',
+    # 'wait_for number',
+    'wait_for digit',
     'remember state',
     'repeat'
 ]

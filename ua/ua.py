@@ -1,6 +1,11 @@
 from think import (Agent, Audition, Aural, Chunk, Environment, Instruction,
                    Item, Language, Memory, Motor, Query, Vision, Visual)
 
+KNOWLEDGE_BASE = [
+    Chunk(isa='synonym', word='number', synonym='digit'),
+    Chunk(isa='synonym', word='digit', synonym='number'),
+]
+
 
 class UndifferentiatedAgent(Agent):
 
@@ -12,6 +17,8 @@ class UndifferentiatedAgent(Agent):
         self.memory.activation_noise = .5
         self.memory.retrieval_threshold = -1.8
         self.memory.latency_factor = .450
+        for chunk in KNOWLEDGE_BASE:
+            self.memory.store(chunk, boost=100)
 
         self.vision = Vision(self, env.display)
         self.audition = Audition(self, env.speakers)
@@ -58,6 +65,18 @@ class UndifferentiatedAgent(Agent):
             self.log('updating context {}={}'.format(slot, value))
             context.set(slot, value)
 
+        def deep_get(chunk, slot):
+            value = chunk.get(slot)
+            if not value:
+                syn = self.memory.recall(isa='synonym', word=slot)
+                if syn:
+                    self.log('trying synonym {}'.format(syn.synonym))
+                    value = chunk.get(syn.synonym)
+            return value
+
+        def get_context(slot):
+            return deep_get(context, slot)
+
         if action.isa == 'action':
 
             if action.type == 'wait_for':
@@ -66,10 +85,10 @@ class UndifferentiatedAgent(Agent):
 
             elif action.type == 'recall':
                 for_slot = action.get('for')
-                query = Query().eq(for_slot, context.get(for_slot))
+                query = Query().eq(for_slot, get_context(for_slot))
                 recalled = self.memory.recall(query)
                 set_context(action.object,
-                            recalled.get(action.object) if recalled else None)
+                            deep_get(recalled, action.object) if recalled else None)
 
             elif action.type == 'read':
                 query = Query(x=action.x, y=action.y)
@@ -78,7 +97,7 @@ class UndifferentiatedAgent(Agent):
             elif action.type == 'type' or action.type == 'press':
                 text = (action.object[1:-1]
                         if action.object.startswith('"')
-                        else context.get(action.object))
+                        else get_context(action.object))
                 self.motor.type(text)
 
             elif action.type == 'remember' and action.object == 'state':
@@ -90,7 +109,7 @@ class UndifferentiatedAgent(Agent):
                     self.instruction.execute(self.goal)
 
         elif action.isa == 'if':
-            cond = context.get(action.condition)
+            cond = get_context(action.condition)
             if cond:
                 self.log('condition passed')
                 self.executor(action.action, context)
