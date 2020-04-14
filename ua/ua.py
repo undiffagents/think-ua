@@ -1,5 +1,5 @@
-from think import (Agent, Audition, Aural, Environment, Instruction, Item,
-                   Language, Memory, Motor, Query, Vision, Visual)
+from think import (Agent, Audition, Aural, Chunk, Environment, Instruction,
+                   Item, Language, Memory, Motor, Query, Vision, Visual)
 
 
 class UndifferentiatedAgent(Agent):
@@ -52,48 +52,48 @@ class UndifferentiatedAgent(Agent):
         else:
             return Item(isa='action', type=words[0])
 
-    def executor(self, item, context):
+    def executor(self, action, context):
 
         def set_context(slot, value):
             self.log('updating context {}={}'.format(slot, value))
             context.set(slot, value)
 
-        if item.isa == 'action':
+        if action.isa == 'action':
 
-            if item.type == 'wait_for':
+            if action.type == 'wait_for':
                 visual = self.vision.wait_for()
-                set_context(item.object, self.vision.encode(visual))
+                set_context(action.object, self.vision.encode(visual))
 
-            elif item.type == 'recall':
-                for_slot = item.get('for')
+            elif action.type == 'recall':
+                for_slot = action.get('for')
                 query = Query().eq(for_slot, context.get(for_slot))
                 recalled = self.memory.recall(query)
-                set_context(item.object,
-                            recalled.get(item.object) if recalled else None)
+                set_context(action.object,
+                            recalled.get(action.object) if recalled else None)
 
-            elif item.type == 'read':
-                query = Query(x=item.x, y=item.y)
-                set_context(item.object, self.vision.find_and_encode(query))
+            elif action.type == 'read':
+                query = Query(x=action.x, y=action.y)
+                set_context(action.object, self.vision.find_and_encode(query))
 
-            elif item.type == 'type' or item.type == 'press':
-                text = (item.object[1:-1]
-                        if item.object.startswith('"')
-                        else context.get(item.object))
+            elif action.type == 'type' or action.type == 'press':
+                text = (action.object[1:-1]
+                        if action.object.startswith('"')
+                        else context.get(action.object))
                 self.motor.type(text)
 
-            elif item.type == 'remember' and item.object == 'state':
+            elif action.type == 'remember' and action.object == 'state':
                 self.log('remembering state')
                 self.memory.store(context)
 
-            elif item.type == 'repeat':
+            elif action.type == 'repeat':
                 if (not self.time_limit) or self.time() < self.time_limit:
                     self.instruction.execute(self.goal)
 
-        elif item.isa == 'if':
-            cond = context.get(item.condition)
+        elif action.isa == 'if':
+            cond = context.get(action.condition)
             if cond:
                 self.log('condition passed')
-                self.executor(item.action, context)
+                self.executor(action.action, context)
             else:
                 self.log('condition failed')
 
