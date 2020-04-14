@@ -32,8 +32,9 @@ class VisualSearchTask(Task):
 
 VISUAL_SEARCH_INSTRUCTIONS = [
     'to perform_task',
-    'wait_for stimulus',
-    'press "j"',
+    'find "C"',
+    'move_mouse_to it',
+    'click_on it',
     'repeat'
 ]
 
