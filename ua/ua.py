@@ -36,13 +36,20 @@ class UndifferentiatedAgent(Agent):
 
     def interpreter(self, words):
         words = [w.lower() for w in words]
-        words = [w for w in words if w not in ['a', 'the']]
+        words = [w for w in words if w not in ['a', 'the', 'you', 'can']]
+
+        if words[0] == 'if':
+            lhs, rhs = ' '.join(words[1:]).split(', ')
+            cond = self.interpreter(lhs.split(' '))
+            act = self.interpreter(rhs.split(' '))
+            return Item(isa='if', condition=cond, action=act)
+
         if self.last_obj:
             words = [self.last_obj if w == 'it' else w for w in words]
 
-        def create_action(type, obj):
+        def create_action(type_, obj):
             self.last_obj = obj
-            return Item(isa='action', type=type, object=obj)
+            return Item(isa='action', type=type_, object=obj)
 
         if words[0] == 'to':
             return Item(isa='goal', name='_'.join(words[1:]))
@@ -58,10 +65,6 @@ class UndifferentiatedAgent(Agent):
         elif words[0] == 'remember':
             objs = [w for w in words[1:] if w != 'and']
             return create_action(words[0], objs)
-
-        elif words[0] == 'if':
-            return Item(isa='if', condition=words[1],
-                        action=self.interpreter(words[2:]))
 
         elif words[0] == 'done':
             return Item(isa='done')
@@ -133,8 +136,10 @@ class UndifferentiatedAgent(Agent):
                 for_slot = action.get('for')
                 query = Query().eq(for_slot, get_context(for_slot))
                 recalled = self.memory.recall(query)
-                set_context(action.object,
-                            deep_get(recalled, action.object) if recalled else None)
+                value = deep_get(recalled, action.object) if recalled else None
+                set_context(action.object, value)
+                if not value:
+                    return False
 
             elif action.type == 'read':
                 query = Query(x=action.x, y=action.y)
@@ -158,12 +163,13 @@ class UndifferentiatedAgent(Agent):
                     self.instruction.execute(self.goal)
 
         elif action.isa == 'if':
-            cond = get_context(action.condition)
-            if cond:
+            if self.executor(action.condition, context):
                 self.log('condition passed')
                 self.executor(action.action, context)
             else:
                 self.log('condition failed')
+
+        return True
 
     def run(self, time):
         self.goal = self.instruction.listen_and_learn()
