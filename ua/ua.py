@@ -49,7 +49,7 @@ class UndifferentiatedAgent(Agent):
 
     def executor(self, item, context):
         if item.isa == 'action':
-            if item.type == 'wait-for':
+            if item.type == 'wait_for':
                 visual = self.vision.wait_for()
                 slot = item.object
                 value = self.vision.encode(visual)

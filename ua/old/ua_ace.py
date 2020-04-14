@@ -83,7 +83,7 @@ class ExampleTask:
 
         # create the ACE instruction text
         ace_instructions = [
-            'to perform-task',
+            'to perform_task',
             'Psychomotor-Vigilance has a box and a target that is a letter.',
             'Acknowledge is a button.',
             'If Psychomotor-Vigilance is active then a letter appears in the box of Psychomotor-Vigilance.',

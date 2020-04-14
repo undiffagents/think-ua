@@ -52,11 +52,11 @@ class PairedAssociatesTask(Task):
 
 
 PAIRED_ASSOCIATE_INSTRUCTIONS = [
-    'to perform-task',
-    'wait-for word',
+    'to perform_task',
+    'wait_for word',
     'recall number for word',
     'if number type number',
-    'wait-for number',
+    'wait_for number',
     'remember state',
     'repeat'
 ]
