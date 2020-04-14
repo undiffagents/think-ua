@@ -34,8 +34,12 @@ class UndifferentiatedAgent(Agent):
         self.time_limit = None
 
     def interpreter(self, words):
+        words = [w for w in words if w not in ['a', 'the']]
 
-        if words[0] == 'read':
+        if words[0] == 'to':
+            return Item(isa='goal', name='_'.join(words[1:]))
+
+        elif words[0] == 'read':
             sem = Item(isa='action', type='read', object=words[1])
             pointer = self.vision.find(isa='pointer')
             if pointer is not None:
@@ -51,9 +55,13 @@ class UndifferentiatedAgent(Agent):
             return Item(isa='done')
 
         elif len(words) >= 2:
-            sem = Item(isa='action', type=words[0], object=words[1])
             if len(words) == 4 and words[2] == 'for':
-                sem.set('for', words[3])
+                return Item(isa='action', type=words[0],
+                            object=words[1]).set('for', words[3])
+            else:
+                return Item(isa='action',
+                            type='_'.join(words[:-1]),
+                            object=words[-1])
             return sem
 
         else:
@@ -89,11 +97,8 @@ class UndifferentiatedAgent(Agent):
             elif action.type == 'find':
                 target = get_context(action.object)
                 visual = self.vision.wait_for(seen=False)
-                print('+++ {}'.format(visual))
                 obj = self.vision.encode(visual) if visual else None
-                print('+++obj {}'.format(obj))
                 while visual and obj != target:
-                    print('++++ {} : {}'.format(visual, obj))
                     visual = self.vision.find(seen=False)
                     obj = self.vision.encode(visual) if visual else None
                 set_context('it', visual)

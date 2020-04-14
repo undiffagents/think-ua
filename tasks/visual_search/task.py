@@ -57,10 +57,10 @@ class VisualSearchTask(Task):
 
 
 VISUAL_SEARCH_INSTRUCTIONS = [
-    'to perform_task',
-    'find "C"',
-    'move_mouse_to it',
-    'click_on it',
+    'to perform the task',
+    'find the "C"',
+    'move the mouse to it',
+    'click on it',
     'repeat'
 ]
 

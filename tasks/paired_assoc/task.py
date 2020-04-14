@@ -51,51 +51,51 @@ class PairedAssociatesTask(Task):
 
 
 PAIRED_ASSOCIATE_INSTRUCTIONS = [
-    'to perform_task',
-    'wait_for word',
+    'to perform the task',
+    'wait for the word',
     'recall number for word',
-    'if number type number',
-    'wait_for number',
+    'if number type the number',
+    'wait for the number',
     'remember state',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1 = [
-    'to perform_task',
-    'wait_for word',
+    'to perform the task',
+    'wait for the word',
     'recall number for word',
-    'if number type number',
-    'wait_for digit',
+    'if number type the number',
+    'wait for the digit',
     'remember state',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2 = [
-    'to perform_task',
-    'wait_for word',
-    'recall digit for word',
-    'if number type number',
-    'wait_for number',
+    'to perform the task',
+    'wait for the word',
+    'recall the digit for the word',
+    'if number type the number',
+    'wait for the number',
     'remember state',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3 = [
-    'to perform_task',
-    'wait_for word',
+    'to perform the task',
+    'wait for the word',
     'recall number for word',
-    'if number type digit',
-    'wait_for number',
+    'if number type the digit',
+    'wait for the number',
     'remember state',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT = [
-    'to perform_task',
-    'wait_for word',
+    'to perform the task',
+    'wait for the word',
     'recall number for word',
-    'if number type number',
-    'wait_for number',
+    'if number type the number',
+    'wait for the number',
     'remember state'
 ]
 
