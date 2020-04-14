@@ -68,14 +68,22 @@ class UndifferentiatedAgent(Agent):
         def deep_get(chunk, slot):
             value = chunk.get(slot)
             if not value:
-                for chunk_slot in chunk.get_slots():
-                    if (not value) and chunk_slot != slot:
-                        syn = self.memory.recall(
-                            isa='synonym', word=chunk_slot)
-                        if syn:
-                            self.log('trying synonym {}'.format(syn.synonym))
-                            value = chunk.get(syn.synonym)
+                syn = self.memory.recall(isa='synonym', word=slot)
+                if syn:
+                    self.log('trying synonym {}'.format(syn.synonym))
+                    value = chunk.get(syn.synonym)
             return value
+
+        # def deep_get(chunk, slot):
+        #     value = chunk.get(slot)
+        #     if value:
+        #         return value
+        #     for chunk_slot in [s for s in chunk.get_slots() if s != slot]:
+        #         if self.memory.recall(isa='synonym', word=slot,
+        #                               synonym=chunk_slot):
+        #             self.log('using synonym {}'.format(chunk_slot))
+        #             return chunk.get(chunk_slot)
+        #     return value
 
         def get_context(slot):
             return deep_get(context, slot)
