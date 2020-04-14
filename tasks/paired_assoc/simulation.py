@@ -27,7 +27,7 @@ class PairedAssociatesSimulation:
         result_correct = corrects.analyze(self.HUMAN_CORRECT)
         result_rt = rts.analyze(self.HUMAN_RT)
 
-        result_correct.output("Correctness", 2)
-        result_rt.output("Response Times", 2)
+        result_correct.output('Correctness', 2)
+        result_rt.output('Response Times', 2)
 
         return (result_correct, result_rt)
