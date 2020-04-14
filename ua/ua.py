@@ -27,6 +27,7 @@ class UndifferentiatedAgent(Agent):
         self.time_limit = None
 
     def interpreter(self, words):
+
         if words[0] == 'read':
             sem = Item(isa='action', type='read', object=words[1])
             pointer = self.vision.find(isa='pointer')
@@ -34,27 +35,34 @@ class UndifferentiatedAgent(Agent):
                 self.vision.encode(pointer)
                 sem.set('x', pointer.x).set('y', pointer.y)
             return sem
+
         elif words[0] == 'if':
             return Item(isa='if', condition=words[1],
                         action=self.interpreter(words[2:]))
+
         elif words[0] == 'done':
             return Item(isa='done')
+
         elif len(words) >= 2:
             sem = Item(isa='action', type=words[0], object=words[1])
             if len(words) == 4 and words[2] == 'for':
                 sem.set('for', words[3])
             return sem
+
         else:
             return Item(isa='action', type=words[0])
 
     def executor(self, item, context):
+
         if item.isa == 'action':
+
             if item.type == 'wait_for':
                 visual = self.vision.wait_for()
                 slot = item.object
                 value = self.vision.encode(visual)
                 self.log('updating context {}={}'.format(slot, value))
                 context.set(slot, value)
+
             elif item.type == 'recall':
                 for_slot = item.get('for')
                 query = Query().eq(for_slot, context.get(for_slot))
@@ -63,23 +71,28 @@ class UndifferentiatedAgent(Agent):
                 value = recalled.get(item.object) if recalled else None
                 self.log('updating context {}={}'.format(slot, value))
                 context.set(slot, value)
+
             elif item.type == 'read':
                 query = Query(x=item.x, y=item.y)
                 slot = item.object
                 value = self.vision.find_and_encode(query)
                 self.log('updating context {}={}'.format(slot, value))
                 context.set(slot, value)
+
             elif item.type == 'type' or item.type == 'press':
                 text = (item.object[1:-1]
                         if item.object.startswith('"')
                         else context.get(item.object))
                 self.motor.type(text)
+
             elif item.type == 'remember' and item.object == 'state':
                 self.log('remembering state')
                 self.memory.store(context)
+
             elif item.type == 'repeat':
                 if (not self.time_limit) or self.time() < self.time_limit:
                     self.instruction.execute(self.goal)
+
         elif item.isa == 'if':
             cond = context.get(item.condition)
             if cond:
