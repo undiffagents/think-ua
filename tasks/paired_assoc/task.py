@@ -3,7 +3,6 @@ import random
 from think import Data, Environment, Task, World
 
 from ..instructions import InstructionTaskFactory
-from .agent import PairedAssociatesAgent
 
 
 class PairedAssociatesTask(Task):

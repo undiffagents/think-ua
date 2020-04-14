@@ -1,6 +1,7 @@
 import random
 
 from think import Task
+from ..instructions import InstructionTaskFactory
 
 
 class VisualSearchTask(Task):
@@ -27,3 +28,14 @@ class VisualSearchTask(Task):
                 string = 'C' if i == target_index else 'O'
                 self.display.add_text(random.randint(10, 90),
                                       random.randint(10, 90), string)
+
+
+VISUAL_SEARCH_INSTRUCTIONS = [
+    'to perform_task',
+    'wait_for stimulus',
+    'press "j"',
+    'repeat'
+]
+
+
+PVTInstructionTask = InstructionTaskFactory(VisualSearchTask, VISUAL_SEARCH_INSTRUCTIONS)
