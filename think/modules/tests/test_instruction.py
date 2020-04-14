@@ -1,7 +1,7 @@
 import unittest
 
-from think import (Agent, Audition, Aural, Instruction, Item, Language,
-                   Environment, Memory, Motor, Query, Vision, Visual)
+from think import (Agent, Audition, Aural, Environment, Instruction, Item,
+                   Language, Memory, Motor, Query, Vision, Visual)
 
 
 class InstructionTest(unittest.TestCase):

@@ -90,7 +90,8 @@ class Speakers:
                 if self.audition else None)
 
     def clear(self):
-        self.audition.clear()
+        if self.audition:
+            self.audition.clear()
         return self
 
 
