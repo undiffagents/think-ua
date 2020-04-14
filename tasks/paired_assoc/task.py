@@ -55,7 +55,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS = [
     'Wait for the word',
     'If you can recall the digit for the word, type the digit',
     'Wait for the digit',
-    'Remember the word and digit',
+    'Remember the word and the digit',
     'Repeat'
 ]
 
@@ -64,7 +64,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1 = [
     'Wait for the word',
     'If you can recall the digit for the word, type the digit',
     'Wait for the number',
-    'Remember the word and digit',
+    'Remember the word and the digit',
     'Repeat'
 ]
 
@@ -73,7 +73,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2 = [
     'Wait for the word',
     'If you can recall the number for the word, type the number',
     'Wait for the digit',
-    'Remember the word and digit',
+    'Remember the word and the digit',
     'Repeat'
 ]
 
@@ -82,7 +82,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3 = [
     'Wait for the word',
     'If you can recall the digit for the word, type it',
     'Wait for the digit',
-    'Remember the word and number',
+    'Remember the word and the number',
     'Repeat'
 ]
 
@@ -91,7 +91,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT = [
     'Wait for the word',
     'If you can recall the digit for the word, type it',
     'Wait for the digit',
-    'Remember the word and digit'
+    'Remember the word and the digit'
 ]
 
 
