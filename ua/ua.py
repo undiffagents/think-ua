@@ -54,6 +54,10 @@ class UndifferentiatedAgent(Agent):
                 sem.set('x', pointer.x).set('y', pointer.y)
             return sem
 
+        elif words[0] == 'remember':
+            objs = [w for w in words[1:] if w != 'and']
+            return create_action(words[0], objs)
+
         elif words[0] == 'if':
             return Item(isa='if', condition=words[1],
                         action=self.interpreter(words[2:]))
@@ -141,9 +145,12 @@ class UndifferentiatedAgent(Agent):
                         else get_context(action.object))
                 self.motor.type(text)
 
-            elif action.type == 'remember' and action.object == 'state':
-                self.log('remembering state')
-                self.memory.store(context)
+            elif action.type == 'remember':
+                chunk = Chunk()
+                for slot in action.object:
+                    chunk.set(slot, get_context(slot))
+                self.log('remembering {}'.format(chunk))
+                self.memory.store(chunk)
 
             elif action.type == 'repeat':
                 if (not self.time_limit) or self.time() < self.time_limit:
