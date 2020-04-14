@@ -32,15 +32,22 @@ class UndifferentiatedAgent(Agent):
         self.instruction.add_executor(lambda a, c: self.executor(a, c))
 
         self.time_limit = None
+        self.last_obj = None
 
     def interpreter(self, words):
         words = [w for w in words if w not in ['a', 'the']]
+        if self.last_obj:
+            words = [self.last_obj if w == 'it' else w for w in words]
+
+        def create_action(type, obj):
+            self.last_obj = obj
+            return Item(isa='action', type=type, object=obj)
 
         if words[0] == 'to':
             return Item(isa='goal', name='_'.join(words[1:]))
 
         elif words[0] == 'read':
-            sem = Item(isa='action', type='read', object=words[1])
+            sem = create_action('read', words[1])
             pointer = self.vision.find(isa='pointer')
             if pointer is not None:
                 self.vision.encode(pointer)
@@ -56,12 +63,9 @@ class UndifferentiatedAgent(Agent):
 
         elif len(words) >= 2:
             if len(words) == 4 and words[2] == 'for':
-                return Item(isa='action', type=words[0],
-                            object=words[1]).set('for', words[3])
+                return create_action(words[0], words[1]).set('for', words[3])
             else:
-                return Item(isa='action',
-                            type='_'.join(words[:-1]),
-                            object=words[-1])
+                return create_action('_'.join(words[:-1]), words[-1])
             return sem
 
         else:
@@ -101,14 +105,23 @@ class UndifferentiatedAgent(Agent):
                 while visual and obj != target:
                     visual = self.vision.find(seen=False)
                     obj = self.vision.encode(visual) if visual else None
-                set_context('it', visual)
+                set_context('found', action.object)
+                set_context('found_visual', visual)
 
             elif action.type == 'move_mouse_to':
-                visual = get_context(action.object)
+                if context.get('found') != action.object:
+                    self.executor(Item(isa='action', type='find',
+                                       object=action.object),
+                                  context)
+                visual = get_context('found_visual')
                 self.motor.move_to(visual)
+                set_context('moved_to', action.object)
 
             elif action.type == 'click_on':
-                visual = get_context(action.object)
+                if context.get('moved_to') != action.object:
+                    self.executor(Item(isa='action', type='move_mouse_to',
+                                       object=action.object),
+                                  context)
                 self.motor.click()
 
             elif action.type == 'recall':
