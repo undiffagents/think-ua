@@ -61,7 +61,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS = [
     'repeat'
 ]
 
-PAIRED_ASSOCIATE_INSTRUCTIONS_2a = [
+PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1 = [
     'to perform_task',
     'wait_for word',
     'recall number for word',
@@ -71,7 +71,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_2a = [
     'repeat'
 ]
 
-PAIRED_ASSOCIATE_INSTRUCTIONS_2b = [
+PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2 = [
     'to perform_task',
     'wait_for word',
     'recall digit for word',
@@ -81,7 +81,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_2b = [
     'repeat'
 ]
 
-PAIRED_ASSOCIATE_INSTRUCTIONS_2c = [
+PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3 = [
     'to perform_task',
     'wait_for word',
     'recall number for word',
@@ -91,11 +91,20 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_2c = [
     'repeat'
 ]
 
+PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT = [
+    'to perform_task',
+    'wait_for word',
+    'recall number for word',
+    'if number type number',
+    'wait_for number',
+    'remember state'
+]
 
 PairedAssociatesInstructionTask = InstructionTaskFactory(
     PairedAssociatesTask,
-    PAIRED_ASSOCIATE_INSTRUCTIONS
-    # PAIRED_ASSOCIATE_INSTRUCTIONS_2a
-    # PAIRED_ASSOCIATE_INSTRUCTIONS_2b
-    # PAIRED_ASSOCIATE_INSTRUCTIONS_2c
+    # PAIRED_ASSOCIATE_INSTRUCTIONS
+    # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1
+    # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2
+    # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3
+    PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT
 )

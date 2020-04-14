@@ -119,7 +119,8 @@ class UndifferentiatedAgent(Agent):
     def run(self, time):
         self.goal = self.instruction.listen_and_learn()
         self.time_limit = self.time() + time
-        self.instruction.execute(self.goal)
+        while self.time() < self.time_limit:
+            self.instruction.execute(self.goal)
 
 
 # class InstructionChunk:
