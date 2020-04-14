@@ -24,7 +24,7 @@ class PairedAssociatesTask(Task):
     def run(self, time):
 
         def handle_key(key):
-            if str(key) == str(self.trial_digit):
+            if str(key) == str(self.trial_number):
                 self.log('correct response')
                 self.corrects.add(self.block, 1)
                 self.rts.add(self.block, self.time() - self.trial_start)
@@ -36,9 +36,9 @@ class PairedAssociatesTask(Task):
             self.block = block
             pairs = self.PAIRS.copy()
             random.shuffle(pairs)
-            for word, digit in pairs:
+            for word, number in pairs:
                 self.trial_start = self.time()
-                self.trial_digit = digit
+                self.trial_number = number
                 self.responded = False
                 self.display.clear()
                 self.display.add_text(50, 50, word, isa='word')
@@ -46,57 +46,57 @@ class PairedAssociatesTask(Task):
                 if not self.responded:
                     self.log('incorrect response')
                     self.corrects.add(self.block, 0)
-                self.display.add_text(50, 50, digit, isa='digit')
+                self.display.add_text(50, 50, number, isa='number')
                 self.wait(5.0)
 
 
 PAIRED_ASSOCIATE_INSTRUCTIONS = [
     'to perform the task',
     'wait for the word',
-    'recall number for word',
-    'if number type the number',
-    'wait for the number',
-    'remember state',
+    'recall the digit for the word',
+    'if digit type the digit',
+    'wait for the digit',
+    'remember the word and digit',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1 = [
     'to perform the task',
     'wait for the word',
-    'recall number for word',
-    'if number type the number',
-    'wait for the digit',
-    'remember state',
+    'recall the digit for the word',
+    'if digit type the digit',
+    'wait for the number',
+    'remember the word and digit',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2 = [
     'to perform the task',
     'wait for the word',
-    'recall the digit for the word',
-    'if number type the number',
-    'wait for the number',
-    'remember state',
+    'recall the number for the word',
+    'if digit type the digit',
+    'wait for the digit',
+    'remember the word and digit',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3 = [
     'to perform the task',
     'wait for the word',
-    'recall number for word',
-    'if number type the digit',
-    'wait for the number',
-    'remember state',
+    'recall the digit for the word',
+    'if digit type the number',
+    'wait for the digit',
+    'remember the word and digit',
     'repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT = [
     'to perform the task',
     'wait for the word',
-    'recall number for word',
-    'if number type the number',
-    'wait for the number',
-    'remember state'
+    'recall the digit for the word',
+    'if digit type the digit',
+    'wait for the digit',
+    'remember the word and digit'
 ]
 
 
