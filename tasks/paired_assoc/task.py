@@ -86,7 +86,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3 = [
     'recall the digit for the word',
     'if digit type the number',
     'wait for the digit',
-    'remember the word and digit',
+    'remember the word and number',
     'repeat'
 ]
 
@@ -105,6 +105,6 @@ PairedAssociatesInstructionTask = InstructionTaskFactory(
     # PAIRED_ASSOCIATE_INSTRUCTIONS
     # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1
     # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2
-    # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3
-    PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT
+    PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3
+    # PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT
 )
