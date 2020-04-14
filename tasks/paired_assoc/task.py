@@ -8,10 +8,10 @@ from .agent import PairedAssociatesAgent
 
 class PairedAssociatesTask(Task):
     N_BLOCKS = 8
-    PAIRS = [("bank", 0), ("card", 1), ("dart", 2), ("face", 3), ("game", 4),
-             ("hand", 5), ("jack", 6), ("king", 7), ("lamb", 8), ("mask", 9),
-             ("neck", 0), ("pipe", 1), ("quip", 2), ("rope", 3), ("sock", 4),
-             ("tent", 5), ("vent", 6), ("wall", 7), ("xray", 8), ("zinc", 9)]
+    PAIRS = [('bank', 0), ('card', 1), ('dart', 2), ('face', 3), ('game', 4),
+             ('hand', 5), ('jack', 6), ('king', 7), ('lamb', 8), ('mask', 9),
+             ('neck', 0), ('pipe', 1), ('quip', 2), ('rope', 3), ('sock', 4),
+             ('tent', 5), ('vent', 6), ('wall', 7), ('xray', 8), ('zinc', 9)]
 
     def __init__(self, env, corrects=None, rts=None):
         super().__init__()
