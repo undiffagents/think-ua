@@ -54,30 +54,26 @@ class UndifferentiatedAgent(Agent):
 
     def executor(self, item, context):
 
+        def set_context(slot, value):
+            self.log('updating context {}={}'.format(slot, value))
+            context.set(slot, value)
+
         if item.isa == 'action':
 
             if item.type == 'wait_for':
                 visual = self.vision.wait_for()
-                slot = item.object
-                value = self.vision.encode(visual)
-                self.log('updating context {}={}'.format(slot, value))
-                context.set(slot, value)
+                set_context(item.object, self.vision.encode(visual))
 
             elif item.type == 'recall':
                 for_slot = item.get('for')
                 query = Query().eq(for_slot, context.get(for_slot))
                 recalled = self.memory.recall(query)
-                slot = item.object
-                value = recalled.get(item.object) if recalled else None
-                self.log('updating context {}={}'.format(slot, value))
-                context.set(slot, value)
+                set_context(item.object,
+                            recalled.get(item.object) if recalled else None)
 
             elif item.type == 'read':
                 query = Query(x=item.x, y=item.y)
-                slot = item.object
-                value = self.vision.find_and_encode(query)
-                self.log('updating context {}={}'.format(slot, value))
-                context.set(slot, value)
+                set_context(item.object, self.vision.find_and_encode(query))
 
             elif item.type == 'type' or item.type == 'press':
                 text = (item.object[1:-1]
