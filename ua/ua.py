@@ -66,24 +66,16 @@ class UndifferentiatedAgent(Agent):
             context.set(slot, value)
 
         def deep_get(chunk, slot):
-            value = chunk.get(slot)
-            if not value:
-                syn = self.memory.recall(isa='synonym', word=slot)
-                if syn:
-                    self.log('trying synonym {}'.format(syn.synonym))
-                    value = chunk.get(syn.synonym)
-            return value
-
-        # def deep_get(chunk, slot):
-        #     value = chunk.get(slot)
-        #     if value:
-        #         return value
-        #     for chunk_slot in [s for s in chunk.get_slots() if s != slot]:
-        #         if self.memory.recall(isa='synonym', word=slot,
-        #                               synonym=chunk_slot):
-        #             self.log('using synonym {}'.format(chunk_slot))
-        #             return chunk.get(chunk_slot)
-        #     return value
+            if slot.startswith('"'):
+                return slot[1:-1]
+            else:
+                value = chunk.get(slot)
+                if not value:
+                    syn = self.memory.recall(isa='synonym', word=slot)
+                    if syn:
+                        self.log('trying synonym {}'.format(syn.synonym))
+                        value = chunk.get(syn.synonym)
+                return value
 
         def get_context(slot):
             return deep_get(context, slot)
@@ -93,6 +85,26 @@ class UndifferentiatedAgent(Agent):
             if action.type == 'wait_for':
                 visual = self.vision.wait_for()
                 set_context(action.object, self.vision.encode(visual))
+
+            elif action.type == 'find':
+                target = get_context(action.object)
+                visual = self.vision.wait_for(seen=False)
+                print('+++ {}'.format(visual))
+                obj = self.vision.encode(visual) if visual else None
+                print('+++obj {}'.format(obj))
+                while visual and obj != target:
+                    print('++++ {} : {}'.format(visual, obj))
+                    visual = self.vision.find(seen=False)
+                    obj = self.vision.encode(visual) if visual else None
+                set_context('it', visual)
+
+            elif action.type == 'move_mouse_to':
+                visual = get_context(action.object)
+                self.motor.move_to(visual)
+
+            elif action.type == 'click_on':
+                visual = get_context(action.object)
+                self.motor.click()
 
             elif action.type == 'recall':
                 for_slot = action.get('for')
