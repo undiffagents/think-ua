@@ -38,4 +38,5 @@ VISUAL_SEARCH_INSTRUCTIONS = [
 ]
 
 
-PVTInstructionTask = InstructionTaskFactory(VisualSearchTask, VISUAL_SEARCH_INSTRUCTIONS)
+VisualSearchInstructionTask = InstructionTaskFactory(
+    VisualSearchTask, VISUAL_SEARCH_INSTRUCTIONS)

@@ -99,6 +99,7 @@ PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT = [
     'remember state'
 ]
 
+
 PairedAssociatesInstructionTask = InstructionTaskFactory(
     PairedAssociatesTask,
     # PAIRED_ASSOCIATE_INSTRUCTIONS
