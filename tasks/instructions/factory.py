@@ -1,8 +1,8 @@
 
 def InstructionTaskFactory(task_class, instructions):
 
-    def init(self, env):
-        task_class.__init__(self, env)
+    def init(self, env, **kwargs):
+        task_class.__init__(self, env, **kwargs)
         self.display = env.display
         self.speakers = env.speakers
 
