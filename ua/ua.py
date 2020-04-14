@@ -35,6 +35,7 @@ class UndifferentiatedAgent(Agent):
         self.last_obj = None
 
     def interpreter(self, words):
+        words = [w.lower() for w in words]
         words = [w for w in words if w not in ['a', 'the']]
         if self.last_obj:
             words = [self.last_obj if w == 'it' else w for w in words]

@@ -26,10 +26,10 @@ class PVTTask(Task):
 
 
 PVT_INSTRUCTIONS = [
-    'to perform the task',
-    'wait for the stimulus',
-    'press "j"',
-    'repeat'
+    'To perform the task',
+    'Wait for the stimulus',
+    'Press "j"',
+    'Repeat'
 ]
 
 

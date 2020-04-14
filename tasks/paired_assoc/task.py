@@ -51,52 +51,52 @@ class PairedAssociatesTask(Task):
 
 
 PAIRED_ASSOCIATE_INSTRUCTIONS = [
-    'to perform the task',
-    'wait for the word',
-    'recall the digit for the word',
-    'if digit type the digit',
-    'wait for the digit',
-    'remember the word and digit',
-    'repeat'
+    'To perform the task',
+    'Wait for the word',
+    'Recall the digit for the word',
+    'If digit type the digit',
+    'Wait for the digit',
+    'Remember the word and digit',
+    'Repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_1 = [
-    'to perform the task',
-    'wait for the word',
-    'recall the digit for the word',
-    'if digit type the digit',
-    'wait for the number',
-    'remember the word and digit',
-    'repeat'
+    'To perform the task',
+    'Wait for the word',
+    'Recall the digit for the word',
+    'If digit type the digit',
+    'Wait for the number',
+    'Remember the word and digit',
+    'Repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_2 = [
-    'to perform the task',
-    'wait for the word',
-    'recall the number for the word',
-    'if digit type the digit',
-    'wait for the digit',
-    'remember the word and digit',
-    'repeat'
+    'To perform the task',
+    'Wait for the word',
+    'Recall the number for the word',
+    'If digit type the digit',
+    'Wait for the digit',
+    'Remember the word and digit',
+    'Repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3 = [
-    'to perform the task',
-    'wait for the word',
-    'recall the digit for the word',
-    'if digit type the number',
-    'wait for the digit',
-    'remember the word and number',
-    'repeat'
+    'To perform the task',
+    'Wait for the word',
+    'Recall the digit for the word',
+    'If digit type the number',
+    'Wait for the digit',
+    'Remember the word and number',
+    'Repeat'
 ]
 
 PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT = [
-    'to perform the task',
-    'wait for the word',
-    'recall the digit for the word',
-    'if digit type the digit',
-    'wait for the digit',
-    'remember the word and digit'
+    'To perform the task',
+    'Wait for the word',
+    'Recall the digit for the word',
+    'If digit type the digit',
+    'Wait for the digit',
+    'Remember the word and digit'
 ]
 
 
