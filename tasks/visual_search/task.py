@@ -74,11 +74,10 @@ VISUAL_SEARCH_INSTRUCTIONS_2 = [
 VISUAL_SEARCH_INSTRUCTIONS_3 = [
     'To perform the task',
     'Click on the "C"',
-    'Repeat'
 ]
 
 
 VisualSearchInstructionTask = InstructionTaskFactory(
     VisualSearchTask,
-    VISUAL_SEARCH_INSTRUCTIONS_2
+    VISUAL_SEARCH_INSTRUCTIONS_3
 )
