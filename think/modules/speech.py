@@ -7,16 +7,12 @@ from .utilities import count_syllables, text_to_words
 
 class Speech(Module):
 
-    def __init__(self, agent):
+    def __init__(self, agent, microphone):
         super().__init__('speech', agent)
+        self.microphone = microphone
         self.worker = Worker('speech', self)
-        self.say_fns = []
         self.base_time = .200
         self.syllable_rate = .150
-
-    def add_say_fn(self, fn):
-        self.say_fns.append(fn)
-        return self
 
     def calculate_duration(self, word):
         return self.base_time + self.syllable_rate * count_syllables(word)
@@ -28,8 +24,8 @@ class Speech(Module):
         duration = self.calculate_duration(word)
 
         def fn():
-            for fn in self.say_fns:
-                fn(word)
+            self.microphone.receive(word)
+
         self.worker.run(duration, s3 + ' "' + word + '"', fn)
 
     def say(self, text):

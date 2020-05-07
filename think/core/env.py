@@ -198,6 +198,21 @@ class Mouse:
         return self
 
 
+class Microphone:
+
+    def __init__(self):
+        self.receive_fns = []
+
+    def add_receive_fn(self, fn):
+        self.receive_fns.append(fn)
+        return self
+
+    def receive(self, word):
+        for fn in self.receive_fns:
+            fn(word)
+        return self
+
+
 class Environment:
 
     def __init__(self, window=None):
@@ -205,3 +220,4 @@ class Environment:
         self.speakers = Speakers()
         self.keyboard = Keyboard()
         self.mouse = Mouse(self.display)
+        self.microphone = Microphone()
