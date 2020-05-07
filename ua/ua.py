@@ -1,5 +1,6 @@
 from think import (Agent, Audition, Aural, Chunk, Environment, Instruction,
-                   Item, Language, Memory, Motor, Query, Vision, Visual)
+                   Item, Language, Memory, Motor, Query, Speech, Vision,
+                   Visual)
 
 
 class UndifferentiatedAgent(Agent):
@@ -23,6 +24,7 @@ class UndifferentiatedAgent(Agent):
         self.vision = Vision(self, env.display)
         self.audition = Audition(self, env.speakers)
         self.motor = Motor(self, self.vision, env)
+        self.speech = Speech(self, env.microphone)
 
         self.language = Language(self)
         self.language.add_interpreter(lambda w: self.interpreter(w))
@@ -95,6 +97,16 @@ class UndifferentiatedAgent(Agent):
                     if syn:
                         self.log('trying synonym {}'.format(syn.synonym))
                         value = chunk.get(syn.synonym)
+
+                    # interactively ask the teacher...
+                    else:
+                        self.speech.say('What is the {}?'.format(slot))
+                        answer = self.audition.listen_for_and_encode(
+                            isa='word')
+                        self.memory.store(
+                            isa='synonym', word=slot, synonym=answer)
+                        value = chunk.get(answer)
+
                 return value
 
         def get_context(slot):

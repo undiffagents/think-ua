@@ -21,8 +21,6 @@ class PairedAssociatesTask(Task):
         self.responded = False
         self.done = False
 
-    def run(self, time):
-
         def handle_key(key):
             if str(key) == str(self.trial_number):
                 self.log('correct response')
@@ -32,6 +30,7 @@ class PairedAssociatesTask(Task):
 
         self.keyboard.add_type_fn(handle_key)
 
+    def run(self, time):
         for block in range(self.N_BLOCKS):
             self.block = block
             pairs = self.PAIRS.copy()
@@ -103,3 +102,21 @@ PairedAssociatesInstructionTask = InstructionTaskFactory(
     # PAIRED_ASSOCIATE_INSTRUCTIONS_SYNONYM_3
     # PAIRED_ASSOCIATE_INSTRUCTIONS_NO_REPEAT
 )
+
+
+class PairedAssociatesInteractiveTask(PairedAssociatesInstructionTask):
+
+    def __init__(self, env, corrects=None, rts=None):
+        super().__init__(env, corrects=corrects, rts=rts)
+        self.microphone = env.microphone
+        self.speakers = env.speakers
+        self.next_is_question = False
+
+        def fn(word):
+            if word == 'a' or word == 'the':
+                self.next_is_question = True
+            elif self.next_is_question:
+                if word == 'number':
+                    self.speakers.add_speech('digit')
+
+        self.microphone.add_receive_fn(fn)

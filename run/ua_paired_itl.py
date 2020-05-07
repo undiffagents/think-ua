@@ -1,4 +1,4 @@
-from tasks.paired_assoc import (PairedAssociatesInstructionTask,
+from tasks.paired_assoc import (PairedAssociatesInteractiveTask,
                                 PairedAssociatesSimulation)
 from ua import UndifferentiatedAgent
 
@@ -9,6 +9,6 @@ if __name__ == '__main__':
     n = 1
     print('Running {} simulations...'.format(n))
     PairedAssociatesSimulation(
-        task_class=PairedAssociatesInstructionTask,
+        task_class=PairedAssociatesInteractiveTask,
         agent_class=UndifferentiatedAgent
     ).run(n=n, output=True)
