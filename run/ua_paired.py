@@ -1,12 +1,9 @@
-from tasks.paired_assoc import (PairedAssociatesInstructionTask,
-                                PairedAssociatesSimulation)
+from tasks.paired_assoc import PairedAssociatesInstructionTask
+from think import Environment, World
 from ua import UndifferentiatedAgent
 
 if __name__ == '__main__':
-
-    n = 10
-    print('Running {} simulations...'.format(n))
-    PairedAssociatesSimulation(
-        task_class=PairedAssociatesInstructionTask,
-        agent_class=UndifferentiatedAgent
-    ).run(n=n, output=False)
+    env = Environment()
+    task = PairedAssociatesInstructionTask(env)
+    agent = UndifferentiatedAgent(env)
+    World(task, agent).run(100)

@@ -9,7 +9,7 @@ KNOWLEDGE_BASE = [
 
 class UndifferentiatedAgent(Agent):
 
-    def __init__(self, env, output=True):
+    def __init__(self, env, output=True, knowledge_base=KNOWLEDGE_BASE):
         super().__init__(output=output)
 
         self.memory = Memory(self, Memory.OPTIMIZED_DECAY)
@@ -17,7 +17,7 @@ class UndifferentiatedAgent(Agent):
         self.memory.activation_noise = .5
         self.memory.retrieval_threshold = -1.8
         self.memory.latency_factor = .450
-        for chunk in KNOWLEDGE_BASE:
+        for chunk in knowledge_base:
             self.memory.store(chunk, boost=100)
 
         self.vision = Vision(self, env.display)
